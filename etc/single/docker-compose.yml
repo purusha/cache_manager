@@ -1,0 +1,67 @@
+# COMMON
+version: "3.9"
+services:
+# POSTGRES
+  postgres:
+    container_name: cache-postgres
+    image: postgres:15.3
+    command: postgres -c 'max_connections=250'
+    environment:
+      POSTGRES_USER: cache
+      POSTGRES_PASSWORD: cache
+      POSTGRES_DATABASE: cache
+    ports:
+       - "5432:5432"
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    logging:
+        driver: "local"
+        options:
+            max-size: "1m"
+    restart: "no"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+# REDIS
+  redis:
+    container_name: cache-redis
+    image: bitnami/redis:7.2.2
+    env_file:
+      - environment
+    ports:
+      - 6379:6379
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+    logging:
+        driver: "local"
+        options:
+            max-size: "1m"
+    restart: "no"
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander:latest
+    env_file:
+      - environment
+    ports:
+      - 6380:8081
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+    logging:
+        driver: "local"
+        options:
+            max-size: "1m"
+    depends_on:
+      - redis
+    restart: "no"

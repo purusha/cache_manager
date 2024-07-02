@@ -1,0 +1,11 @@
+
+# COMMON: Redis
+REDIS_PASSWORD=cicciobello
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_URL=redis://${REDIS_HOST}:${REDIS_PORT}
+
+# POSTGRES
+SQL_DB_URL=jdbc:postgresql://postgres:5432
+SQL_DB_USERNAME=postgres
+SQL_DB_PWD=postgres

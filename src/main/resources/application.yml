@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: cachemanager
+  liquibase:
+    enabled: true
+    change-log: 'classpath:db/changelog/master.xml'
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/cache
+    username: cache
+    password: cache
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    open-in-view: false
+  redis:
+    host: localhost
+    port: 6379
+    password: cicciobello
+springdoc:
+  api-docs:
+    path: /api
+  swagger-ui:
+    path: /swagger
