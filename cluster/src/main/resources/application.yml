@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: cachemanager
+  liquibase:
+    enabled: true
+    change-log: 'classpath:db/changelog/master.xml'
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/cache
+    username: cache
+    password: cache
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    open-in-view: false
+
+springdoc:
+  api-docs:
+    path: /api
+  swagger-ui:
+    path: /swagger
+logging:
+  level:
+    org.redisson: error
+
+cachemanager:
+  redis:
+    address: redis://redis-node-0:6379,redis://redis-node-1:6379,redis://redis-node-2:6379,redis://redis-node-3:6379,redis://redis-node-4:6379,redis://redis-node-5:6379
+    cluster-mode: cluster
+    connection-minimum-idle-size: 15
+    connection-pool-size: 75
+    idle-connection-timeout: 10000
+    password: bitnami

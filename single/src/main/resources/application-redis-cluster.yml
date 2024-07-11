@@ -1,0 +1,8 @@
+cachemanager:
+  redis:
+    address: redis://localhost:6379,redis://localhost:6380,redis://localhost:6381,redis://localhost:6382,redis://localhost:6383,redis://localhost:6384
+    cluster-mode: cluster
+    connection-minimum-idle-size: 15
+    connection-pool-size: 75
+    idle-connection-timeout: 10000
+    password: bitnami

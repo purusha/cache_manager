@@ -1,0 +1,138 @@
+# COMMON
+version: "3.9"
+services:
+  cache-manager:
+    container_name: cache-manager
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis-node-0
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+      - redis-node-5
+
+# POSTGRES
+  postgres:
+    container_name: cache-postgres
+    image: postgres:15.3
+    command: postgres -c 'max_connections=250'
+    environment:
+      POSTGRES_USER: cache
+      POSTGRES_PASSWORD: cache
+      POSTGRES_DATABASE: cache
+    ports:
+       - "5432:5432"
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    logging:
+        driver: "local"
+        options:
+            max-size: "1m"
+    restart: "no"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+# REDIS
+  redis-node-0:
+    image: docker.io/bitnami/redis-cluster:7.2.2-debian-11-r0
+    container_name: redis-node-0
+    volumes:
+      - redis-cluster_data-0:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+    ports:
+      - "6379:6379"
+
+
+  redis-node-1:
+    image: docker.io/bitnami/redis-cluster:7.2.2-debian-11-r0
+    container_name: redis-node-1
+    volumes:
+      - redis-cluster_data-1:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+    ports:
+      - "6380:6379"
+
+  redis-node-2:
+    image: docker.io/bitnami/redis-cluster:7.2.2-debian-11-r0
+    container_name: redis-node-2
+    volumes:
+      - redis-cluster_data-2:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+    ports:
+      - "6381:6379"
+
+  redis-node-3:
+    image: docker.io/bitnami/redis-cluster:7.2.2-debian-11-r0
+    container_name: redis-node-3
+    volumes:
+      - redis-cluster_data-3:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+    ports:
+      - "6382:6379"
+
+  redis-node-4:
+    image: docker.io/bitnami/redis-cluster:7.2.2-debian-11-r0
+    container_name: redis-node-4
+    volumes:
+      - redis-cluster_data-4:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+    ports:
+      - "6383:6379"
+
+  redis-node-5:
+    image: docker.io/bitnami/redis-cluster:7.2.2-debian-11-r0
+    container_name: redis-node-5
+    volumes:
+      - redis-cluster_data-5:/bitnami/redis/data
+    ports:
+      - "6384:6379"
+    depends_on:
+      - redis-node-0
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDISCLI_AUTH=bitnami'
+      - 'REDIS_CLUSTER_REPLICAS=1'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+      - 'REDIS_CLUSTER_CREATOR=yes'
+
+volumes:
+  redis-cluster_data-0:
+    driver: local
+  redis-cluster_data-1:
+    driver: local
+  redis-cluster_data-2:
+    driver: local
+  redis-cluster_data-3:
+    driver: local
+  redis-cluster_data-4:
+    driver: local
+  redis-cluster_data-5:
+    driver: local
